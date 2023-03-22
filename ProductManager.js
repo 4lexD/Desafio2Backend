@@ -27,7 +27,7 @@ class ProductManager{
     }
     async addProducts(product){
         try{
-            if(fs.existsSync(this._name)){
+            if(fs.existsSync(this._path)){
                 const productos = await this.getProducts()
                 if(productos.length>0){
                     const id = productos[productos.length-1].id+1
