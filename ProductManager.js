@@ -112,8 +112,10 @@ const product1 = {
 
 const getData = async()=>{
     
-    //const addP = await productManager.addProducts(product1)
-    //const showProducts = await productManager.getAll();
+    const addP = await productManager.addProducts(product1)
+    const addP2 = await productManager.addProducts(product2)
+    
+    const showProducts = await productManager.getProducts();
     //console.log("ShowProducts",showProducts);
    const productFinded = await productManager.getProductById(1);
     console.log("Producto: ", productFinded)
