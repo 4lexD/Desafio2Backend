@@ -5,7 +5,7 @@ class ProductManager{
         this._path = path
     }
 
-    async getById(id){
+    async getProductById(id){
         try{
             const products = await this.getProducts();
             const producto = products.find(element=>element.id === id)
@@ -115,7 +115,7 @@ const getData = async()=>{
     //const addP = await productManager.addProducts(product1)
     //const showProducts = await productManager.getAll();
     //console.log("ShowProducts",showProducts);
-   const productFinded = await productManager.getById(1);
+   const productFinded = await productManager.getProductById(1);
     console.log("Producto: ", productFinded)
 
     const update = await productManager.updateProduct(1,product2)
