@@ -1,8 +1,8 @@
 const fs = require("fs");
 
 class ProductManager{
-    constructor(name){
-        this._name = name
+    constructor(path){
+        this._path = path
     }
 
     async getById(id){
@@ -19,7 +19,7 @@ class ProductManager{
         try {
             const products = await this.getProducts();
             const newProducts = products.filter(element=>element.id !== id);
-            await fs.promises.writeFile(this._name,JSON.stringify(newProducts,null,2))
+            await fs.promises.writeFile(this._path,JSON.stringify(newProducts,null,2))
             return "producto eliminado"
         } catch (error) {
             return "el elemento no puede ser eliminado"
@@ -33,15 +33,15 @@ class ProductManager{
                     const id = productos[productos.length-1].id+1
                     product.id = id 
                     productos.push(product)
-                    await fs.promises.writeFile(this._name,JSON.stringify(productos,null,2))
+                    await fs.promises.writeFile(this._path,JSON.stringify(productos,null,2))
                 }else{
                     product.id=1
-                    await fs.promises.writeFile(this._name,JSON.stringify([product],null,2))
+                    await fs.promises.writeFile(this._path,JSON.stringify([product],null,2))
                 }
             }
             else{
                 product.id=1
-                await fs.promises.writeFile(this._name,JSON.stringify([product],null,2))
+                await fs.promises.writeFile(this._path,JSON.stringify([product],null,2))
             }
 
         } catch(error){
@@ -51,7 +51,7 @@ class ProductManager{
 
     async getProducts(){
         try{
-            const content = await fs.promises.readFile(this._name, "utf-8");
+            const content = await fs.promises.readFile(this._path, "utf-8");
             if(content.length>0){
                 const Product = JSON.parse(content);
                 return Product;
@@ -60,6 +60,22 @@ class ProductManager{
             }
         } catch(error){
          return "el archivo no pudo ser leido"
+        }
+    }
+
+    async updateProduct(id, updatedProperties) {
+        try {
+            const products = await this.getProducts();
+            const index = products.findIndex(product => product.id === id);
+            if (index === -1) {
+                return "El producto no existe";
+            }
+            const updatedProduct = { ...products[index], ...updatedProperties };
+            products.splice(index, 1, updatedProduct);
+            await fs.promises.writeFile(this._path, JSON.stringify(products, null, 2));
+            return "Producto actualizado correctamente";
+        } catch (error) {
+            return "El producto no pudo ser actualizado";
         }
     }
 
@@ -96,12 +112,13 @@ const product1 = {
 
 const getData = async()=>{
     
-    const addP = await productManager.addProducts(product1)
-    const showProducts = await productManager.getAll();
+    //const addP = await productManager.addProducts(product1)
+    //const showProducts = await productManager.getAll();
     //console.log("ShowProducts",showProducts);
    const productFinded = await productManager.getById(1);
     console.log("Producto: ", productFinded)
 
-    
+    const update = await productManager.updateProduct(1,product2)
+    console.log("Producto: ", productFinded)
 }
 getData()
